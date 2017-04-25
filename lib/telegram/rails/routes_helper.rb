@@ -2,8 +2,8 @@ module Telegram
   module Rails
     module RoutesHelper
 
-      def telegram name, options
-        ActiveSupport::Notifications.instrument "telegram.register_route", name: name, controllerClass: options[:to]
+      def telegram route, options
+        ActiveSupport::Notifications.instrument "telegram.register_route", route: route, options: options
       end
 
     end #RoutesHelper

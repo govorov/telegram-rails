@@ -5,9 +5,13 @@ require 'telegram/utils/keyboard_builder'
 module Telegram
   class Controller
 
-    def initialize client
-      @client = client
-      @responder = Telegram::Utils::Responder.new
+    def bots= adapters
+      @bots = adapters
+    end
+
+
+    def bot_name= name
+      @bot_name = name
     end
 
 
@@ -16,20 +20,31 @@ module Telegram
     end
 
 
+    def explicit_response?
+      @explicit_response
+    end
+
+
     private
 
-    def message
+    def bot
+      @bots[@bot_name]
+    end
+
+
+    def bots
+      @bots
+    end
+
+
+    def request
       @message
     end
 
 
     def send_message *args
       bot.api.send_message *args
-    end
-
-
-    def bot
-      @client
+      @explicit_response = true
     end
 
 
@@ -38,18 +53,13 @@ module Telegram
     end
 
 
-    def respond_to
-      @responder.current_message = message
-      yield @responder
-      @responder.clear_current_message
-      response = respond_with @responder.block.call
-      send_message response
-    end
-
-
     def respond_with payload
-      #HERE !Hash => to_s
       response = payload.clone
+      # WIP угадывать тип, посмотреть какие есть типы ответа
+      unless response.is_a? Hash
+        response = {text: response.to_s}
+      end
+
       # :keyboard        => :reply_markup, call :keyboard
       # :inline_keyboard => :reply_markup, call :inline_keyboard
       if response.has_key? :keyboard

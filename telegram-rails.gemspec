@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Stanislav E. Govorov"]
   spec.email         = ["govorov.st@gmail.com"]
 
-  spec.summary       = %q{ Rails integration for telegram-bot-ruby }
+  spec.summary       = %q{ Rails integration for telegram-bot-rabbit }
   # TODO
   # spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "telegram-bot-ruby"
   spec.add_runtime_dependency "wisper"
+  spec.add_runtime_dependency "bunny"
+  spec.add_runtime_dependency "json"
 
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"

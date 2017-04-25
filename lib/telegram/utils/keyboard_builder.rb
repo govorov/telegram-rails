@@ -1,4 +1,4 @@
-require 'telegram/bot/types'
+require 'telegram/bot'
 
 module Telegram
   module Utils

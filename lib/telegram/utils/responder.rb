@@ -3,6 +3,7 @@ require 'telegram/errors/controller/block_not_given_error'
 #WIP-- `ag byebug`
 require 'byebug'
 
+#WIP move to ...::Controller, продумать
 
 module Telegram
   module Utils
@@ -54,6 +55,10 @@ module Telegram
         :migrate_to_chat_id,
         :migrate_from_chat_id,
         :pinned_message,
+        # Telegram::Bot::Types::ReplyKeyboardMarkup,
+        # Telegram::Bot::Types::ReplyKeyboardRemove,
+        # Telegram::Bot::Types::ForceReply,
+        # Telegram::Bot::Types::InlineKeyboardMarkup
       ]
 
 
