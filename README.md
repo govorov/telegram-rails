@@ -10,14 +10,14 @@ Gives you http-like routes and controllers. Allows you to write such a code:
 #routes.rb
 Rails.application.routes.draw do
 
-  telegram 'main/start', to: 'telegram/message#start'
-  telegram 'main/stop',  to: 'telegram/message#stop'
-  telegram 'main',       to: 'telegram/message'
+  telegram 'main/start', to: 'telegram/messages#start'
+  telegram 'main/stop',  to: 'telegram/messages#stop'
+  telegram 'main',       to: 'telegram/messages'
 
 end
 
-#message_controller.rb
-class Telegram::MessageController < Telegram::Controller
+#telegram/messages_controller.rb
+class Telegram::MessagesController < Telegram::Controller
 
   def start
     respond_with 'received /start'
