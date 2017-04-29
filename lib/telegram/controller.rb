@@ -1,5 +1,8 @@
+require 'active_support/inflector'
+
 require 'telegram/utils/responder'
 require 'telegram/utils/keyboard_builder'
+require 'telegram/controller/renderer'
 
 
 module Telegram
@@ -20,12 +23,68 @@ module Telegram
     end
 
 
-    def explicit_response?
-      @explicit_response
+    def dispatch action
+      @current_action = action
+      self.send action
+
+      render unless @has_response
+
+      @current_action = nil
+
+      # WIP rescue from
+    end
+
+
+    def not_exposed_instance_variables
+      [
+        :bots, :message,
+        :current_action, :rendered,
+        :bot_name, :has_response,
+      ]
+    end
+
+
+    # TEST
+    def expose_instance_variables
+      hash = {}
+      variables  = instance_variables
+      variables -= not_exposed_instance_variables.map { |v| :"@#{v}" }
+
+      variables.each do |name|
+        # cut @
+        var_name = name[1..-1]
+        hash[var_name] = instance_variable_get(name)
+      end
+
+      hash
     end
 
 
     private
+
+    def has_response?
+      @has_response
+    end
+
+
+    def render opts = {}
+      raise Telegram::Errors::Renderer::DoubleRenderError if @rendered
+
+      response, response_format = Renderer.new(controller: self, action: @current_action).render(opts)
+      respond_with response, parse_mode: parse_modes[response_format]
+
+      @rendered = true
+    end
+
+
+    def parse_modes
+      {
+        markdown: 'Markdown',
+        html:     'Html',
+        text:     nil,
+      }
+    end
+
 
     def bot
       @bots[@bot_name]
@@ -44,7 +103,7 @@ module Telegram
 
     def send_message *args
       bot.api.send_message *args
-      @explicit_response = true
+      @has_response = true
     end
 
 
@@ -53,7 +112,7 @@ module Telegram
     end
 
 
-    def respond_with payload
+    def respond_with payload, rest = {}
       response = payload.clone
       # WIP угадывать тип, посмотреть какие есть типы ответа
       unless response.is_a? Hash
@@ -77,7 +136,7 @@ module Telegram
         response.delete :remove_keyboard
       end
 
-      send_message default_response.merge(response)
+      send_message default_response.merge(response).merge(rest)
     end
 
 

@@ -1,7 +1,6 @@
 require 'active_support/inflector'
 require 'telegram/errors/controller/block_not_given_error'
-#WIP-- `ag byebug`
-require 'byebug'
+
 
 #WIP move to ...::Controller, продумать
 

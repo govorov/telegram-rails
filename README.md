@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
 end
 
-#telegram/messages_controller.rb
+#messages_controller.rb
 class Telegram::MessagesController < Telegram::Controller
 
   def start
@@ -31,6 +31,20 @@ class Telegram::MessagesController < Telegram::Controller
 
   def process
     respond_with 'other commands'
+  end
+
+
+  #rails-like implicit/explicit template rendering (only ERB support now)
+  def show
+    #app/views/telegram/messages/show.(md|html|txt).erb
+    #all instance variables are available in templates, like in rails
+    @v1 = 'some value'
+  end
+
+
+  def explicit
+    #explicit template rendering
+    render 'telegram/path/to/template'
   end
 
 end

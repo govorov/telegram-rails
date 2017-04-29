@@ -65,21 +65,12 @@ module Telegram
           c.message  = message
         end
 
-        begin
-          # WIP check explicit response...
-          controller.send route[:action_name]
-        rescue StandardError => e
-          puts "RESCUE FROM"
-          puts "RESCUE FROM"
-          puts "RESCUE FROM"
-          puts "RESCUE FROM"
-          #HERE rescue_from!!!
-          raise e
-        end
+        controller.dispatch route[:action_name]
+        #HERE args support
       end
 
 
-      #TODO test coverage
+      #TEST
       def parse_route route_data
         route_string = route_data[:route]
         options      = route_data[:options]
