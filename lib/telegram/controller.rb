@@ -14,7 +14,7 @@ module Telegram
     attr_writer :params
 
 
-    def dispatch action, args = nil
+    def dispatch action
       @current_action = action
       self.send action
 
