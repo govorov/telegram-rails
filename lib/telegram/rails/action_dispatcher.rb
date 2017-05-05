@@ -32,7 +32,7 @@ module Telegram
         route = find_route_for bot_name, command
         return unless route
 
-        process_message message, with: route
+        process_message message, with: route, args: args, command: command
       end
 
 
@@ -58,19 +58,23 @@ module Telegram
 
       def process_message message, opts
         route = opts[:with]
+
         controller = route[:controller_class].new
         controller.tap do |c|
           c.bots     = @adapters
           c.bot_name = route[:bot_name]
           c.message  = message
+          c.params   = {
+            command: opts[:command],
+            args:    opts[:args],
+          }
         end
 
         controller.dispatch route[:action_name]
-        #HERE args support
       end
 
 
-      #TEST
+      # TEST
       def parse_route route_data
         route_string = route_data[:route]
         options      = route_data[:options]
@@ -79,7 +83,7 @@ module Telegram
         bot_name, command = segments
 
         bot_name = bot_name.to_sym if bot_name
-        command  = command.to_sym if command
+        command  = command.to_sym  if command
 
         endpoint = options[:to]
         controller_name, action_name = endpoint.to_s.split ENDPOINT_DELIMETER, 2
@@ -96,6 +100,7 @@ module Telegram
       end
 
 
+      # TEST
       # get command name from payload
       def extract_command_from payload
         command_str = payload.text

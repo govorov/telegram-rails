@@ -8,22 +8,13 @@ require 'telegram/controller/renderer'
 module Telegram
   class Controller
 
-    def bots= adapters
-      @bots = adapters
-    end
+    attr_writer :bots
+    attr_writer :bot_name
+    attr_writer :message
+    attr_writer :params
 
 
-    def bot_name= name
-      @bot_name = name
-    end
-
-
-    def message= payload
-      @message = payload
-    end
-
-
-    def dispatch action
+    def dispatch action, args = nil
       @current_action = action
       self.send action
 
@@ -98,6 +89,11 @@ module Telegram
 
     def request
       @message
+    end
+
+
+    def params
+      @params
     end
 
 

@@ -18,7 +18,7 @@ module Telegram
 
 
       def render opts = {}
-        options = opts.merge(default_render_options)
+        options = normalize_options(opts)
         view    = Controller::ViewObject.new(@controller.expose_instance_variables)
         template_file_name, response_format = resolve_template(options)
 
@@ -31,6 +31,14 @@ module Telegram
 
 
       private
+
+      def normalize_options opts
+        if opts.is_a? String
+          opts = {template: opts}
+        end
+        default_render_options.merge(opts)
+      end
+
 
       def default_render_options
         controller_name = @controller.class.to_s.underscore.gsub(/_controller$/,'')
